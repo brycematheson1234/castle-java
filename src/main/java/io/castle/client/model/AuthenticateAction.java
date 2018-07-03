@@ -9,9 +9,9 @@ package io.castle.client.model;
  * @see <a href="https://castle.io/docs/authentication">Adaptive authentication</a>
  */
 public class AuthenticateAction {
-    public static final String ALLOW = "ALLOW";
-    public static final String DENY = "DENY";
-    public static final String CHALLENGE = "CHALLENGE";
+    public static final String ALLOW = "allow";
+    public static final String DENY = "deny";
+    public static final String CHALLENGE = "challenge";
 
     /**
      * Returns an AuthenticateAction from a string representing its name.

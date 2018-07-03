@@ -130,11 +130,11 @@ class ConfigurationLoader {
                 "backend_provider",
                 "CASTLE_SDK_BACKEND_PROVIDER"
         );
-        String authenticateFailoverStrategyValue = loadConfigurationValue(
+        String authenticateFailoverStrategyValue = AuthenticateAction.fromAction(loadConfigurationValue(
                 castleConfigurationProperties,
                 "failover_strategy",
                 "CASTLE_SDK_AUTHENTICATE_FAILOVER_STRATEGY"
-        );
+        ));
         String apiBaseUrl = loadConfigurationValue(
                 castleConfigurationProperties,
                 "base_url",
