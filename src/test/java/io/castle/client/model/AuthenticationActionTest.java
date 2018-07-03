@@ -36,6 +36,7 @@ public class AuthenticationActionTest {
     }
 
     private void testFromActionMethod(String from, String expected) {
-        Assert.assertEquals(expected, from);
+        String authenticateAction = AuthenticateAction.fromAction(from);
+        Assert.assertEquals(expected, authenticateAction);
     }
 }
