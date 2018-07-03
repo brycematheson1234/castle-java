@@ -100,7 +100,7 @@ Verdict verdict = castle.authenticate(CastleMessage.builder("$login.succeeded")
     .build()
 );
 
-if (verdict.getAction() == AuthenticateAction.DENY) {
+if (verdict.getAction().equals(AuthenticateAction.DENY)) {
   // IMPLEMENT: Deny user
 }
 ```
