@@ -1,17 +1,15 @@
 package io.castle.client.internal.utils;
 
-import io.castle.client.model.AuthenticateAction;
-
 public class VerdictTransportModel {
 
-    private AuthenticateAction action;
+    private String action;
     private String userId;
 
-    public AuthenticateAction getAction() {
+    public String getAction() {
         return action;
     }
 
-    public void setAction(AuthenticateAction action) {
+    public void setAction(String action) {
         this.action = action;
     }
 

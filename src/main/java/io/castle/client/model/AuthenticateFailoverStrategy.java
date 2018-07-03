@@ -12,10 +12,10 @@ import io.castle.client.api.CastleApi;
  */
 public class AuthenticateFailoverStrategy {
 
-    private final AuthenticateAction defaultAction;
+    private final String defaultAction;
     private final boolean throwTimeoutException;
 
-    private AuthenticateFailoverStrategy(AuthenticateAction defaultAction, boolean throwTimeoutException) {
+    private AuthenticateFailoverStrategy(String defaultAction, boolean throwTimeoutException) {
         this.defaultAction = defaultAction;
         this.throwTimeoutException = throwTimeoutException;
     }
@@ -25,7 +25,7 @@ public class AuthenticateFailoverStrategy {
      *
      * @param action the authenticateAction that will be used as a default for failed requests
      */
-    public AuthenticateFailoverStrategy(AuthenticateAction action) {
+    public AuthenticateFailoverStrategy(String action) {
         this(action, false);
     }
 
@@ -42,7 +42,7 @@ public class AuthenticateFailoverStrategy {
      *
      * @return the authenticateAction configured as default; null if there is no default AuthenticateAction
      */
-    public AuthenticateAction getDefaultAction() {
+    public String getDefaultAction() {
         return defaultAction;
     }
 

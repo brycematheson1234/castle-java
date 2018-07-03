@@ -8,7 +8,7 @@ public class Verdict {
     /**
      * AuthenticateAction returned by a call to the CastleAPI, or configured by a failover strategy.
      */
-    private AuthenticateAction action;
+    private String action;
 
     /**
      * String representing a user ID associated with an authenticate call.
@@ -25,11 +25,11 @@ public class Verdict {
      */
     private String failoverReason;
 
-    public AuthenticateAction getAction() {
+    public String getAction() {
         return action;
     }
 
-    public void setAction(AuthenticateAction action) {
+    public void setAction(String action) {
         this.action = action;
     }
 

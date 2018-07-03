@@ -17,7 +17,6 @@ public class CastleGsonModel {
         builder.registerTypeAdapter(String.class, new StringJsonSerializer());
         builder.registerTypeAdapter(CastleMessage.class, new CastleMessageSerializer());
         builder.registerTypeAdapter(CastleHeaders.class, new CastleHeadersDeserializer());
-        builder.registerTypeAdapter(AuthenticateAction.class, new AuthenticateActionDeserializer());
         this.gson = builder.create();
     }
 

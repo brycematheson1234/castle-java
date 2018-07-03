@@ -4,7 +4,7 @@ import io.castle.client.model.AuthenticateAction;
 import io.castle.client.model.Verdict;
 
 public class VerdictBuilder {
-    private AuthenticateAction action;
+    private String action;
     private String userId;
     private boolean failover;
     private String failoverReason;
@@ -23,7 +23,7 @@ public class VerdictBuilder {
                 .withFailoverReason(failoverReason);
     }
 
-    public VerdictBuilder withAction(AuthenticateAction action) {
+    public VerdictBuilder withAction(String action) {
         this.action = action;
         return this;
     }

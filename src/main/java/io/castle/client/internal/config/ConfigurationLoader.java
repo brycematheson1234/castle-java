@@ -170,9 +170,7 @@ class ConfigurationLoader {
                 builder.withAuthenticateFailoverStrategy(new AuthenticateFailoverStrategy());
             } else {
                 builder.withAuthenticateFailoverStrategy(
-                        new AuthenticateFailoverStrategy(
-                                AuthenticateAction.fromAction(authenticateFailoverStrategyValue)
-                        )
+                        new AuthenticateFailoverStrategy(authenticateFailoverStrategyValue)
                 );
             }
         } else {
