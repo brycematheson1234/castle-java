@@ -79,19 +79,13 @@ public class OkRestApiBackend implements RestApi {
                 .url(authenticate)
                 .post(body)
                 .build();
-        try (Response response = client.newCall(request).execute()) {
-            return extractAuthenticationAction(response, userId);
+        Response response;
+        try {
+            response = client.newCall(request).execute();
         } catch (IOException e) {
-            Castle.logger.error("HTTP layer. Error sending request.", e);
-            if (configuration.getAuthenticateFailoverStrategy().isThrowTimeoutException()) {
-                throw OkHttpExceptionUtil.handle(e);
-            } else {
-                return VerdictBuilder.failover(e.getMessage())
-                        .withAction(configuration.getAuthenticateFailoverStrategy().getDefaultAction())
-                        .withUserId(userId)
-                        .build();
-            }
+            return handleExtractAuthenticationIOException(e, userId);
         }
+        return extractAuthenticationAction(response, userId);
     }
 
     @Override
@@ -119,7 +113,7 @@ public class OkRestApiBackend implements RestApi {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response) {
                 try (ResponseBody responseBody = response.body()) {
                     asyncCallbackHandler.onResponse(extractAuthenticationAction(response, userId));
                 }
@@ -140,9 +134,14 @@ public class OkRestApiBackend implements RestApi {
         return RequestBody.create(JSON, json.toString());
     }
 
-    private Verdict extractAuthenticationAction(Response response, String userId) throws IOException {
+    private Verdict extractAuthenticationAction(Response response, String userId) {
         String errorReason = response.message();
-        String jsonResponse = response.body().string();
+        String jsonResponse;
+        try {
+            jsonResponse = response.body().string();
+        } catch (IOException e) {
+            return handleExtractAuthenticationIOException(e, userId);
+        }
 
         if (response.isSuccessful()) {
             Gson gson = model.getGson();
@@ -158,18 +157,32 @@ public class OkRestApiBackend implements RestApi {
         if (response.code() >= 500) {
             //Use failover for error backends calls.
             if (!configuration.getAuthenticateFailoverStrategy().isThrowTimeoutException()) {
-                Verdict verdict = VerdictBuilder.failover(errorReason)
+                return VerdictBuilder.failover(errorReason)
                         .withAction(configuration.getAuthenticateFailoverStrategy().getDefaultAction())
                         .withUserId(userId)
                         .build();
-                return verdict;
             } else {
                 throw new CastleApiInternalServerErrorException(response);
             }
         }
+        if (response.code() >= 400) {
+            return handleExtractAuthenticationIOException(new IOException(jsonResponse), userId);
+        }
 
         // Could not extract Verdict, so fail for client logic space.
         throw new CastleRuntimeException(response);
+    }
+
+    private Verdict handleExtractAuthenticationIOException(IOException e, String userId) {
+        Castle.logger.error("HTTP layer error", e);
+        if (configuration.getAuthenticateFailoverStrategy().isThrowTimeoutException()) {
+            throw OkHttpExceptionUtil.handle(e);
+        } else {
+            return VerdictBuilder.failover(e.getMessage())
+                    .withAction(configuration.getAuthenticateFailoverStrategy().getDefaultAction())
+                    .withUserId(userId)
+                    .build();
+        }
     }
 
     @Override
